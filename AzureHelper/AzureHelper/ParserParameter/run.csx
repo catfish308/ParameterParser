@@ -5,8 +5,7 @@ using FunctionSupport;
 public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceWriter log)
 {
     
-    log.Info($"C# HTTP trigger function processed a request. RequestUri={req.RequestUri}");
-
+   
     // parse query parameter
     string parameterName = 
         req.GetQueryNameValuePairs()
@@ -23,11 +22,16 @@ public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, TraceW
     string  DefaultValue= x.GetDefaulValue(parameterName);
     string allowedValues = x.GetAllowedValues(parameterName);
 
-    string jsonOut = "{ \"DefaultValue\":\"" + DefaultValue + "\" ,";
-    jsonOut += "\"allowedValues\": " + allowedValues + "}";
+    string jsonOut = @"{ ""DefaultValue"": """ + DefaultValue + @""" ,";
+    if (string.IsNullOrEmpty(allowedValues))
+    {
+        allowedValues = "[]";
+    }
+    jsonOut += @"""allowedValues"": " + allowedValues + "}";
     jsonOut=jsonOut.Replace("\r\n", string.Empty);
-    jsonOut = jsonOut.Replace("\"", string.Empty);
-    return template == null
-        ? req.CreateResponse(HttpStatusCode.BadRequest, "Please pass a name on the query string or in the request body")
-        : req.CreateResponse(HttpStatusCode.OK, jsonOut);
-}
+
+    var response = req.CreateResponse(HttpStatusCode.OK);
+    response.Content = new StringContent(jsonOut, System.Text.Encoding.UTF8, "application/json");
+
+    return response;
+ }

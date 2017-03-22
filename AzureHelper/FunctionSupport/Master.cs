@@ -15,6 +15,8 @@ namespace FunctionSupport
         public Master(string jsonTemplate)
         {
             myTemplate = JObject.Parse(jsonTemplate);
+
+           
         }
 
 
@@ -42,9 +44,10 @@ namespace FunctionSupport
             catch (Exception X)
             {
                 Trace.TraceError(X.Message);
-
+            
             }
             return values;
         }
+
     }
 }
