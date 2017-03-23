@@ -15,8 +15,6 @@ namespace FunctionSupport
         public Master(string jsonTemplate)
         {
             myTemplate = JObject.Parse(jsonTemplate);
-
-           
         }
 
 
